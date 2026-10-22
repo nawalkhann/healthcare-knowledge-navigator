@@ -1,5 +1,5 @@
 -- Source library schema: documents, their chunks, and query logs.
-create extension if not exists vector;
+create extension if not exists vector with schema extensions;
 
 create table documents (
   id bigint generated always as identity primary key,
@@ -18,11 +18,11 @@ create table chunks (
   section_path text not null,         -- e.g. "Hypertension > Treatment > First-line"
   content text not null,
   token_count int not null,
-  embedding vector(384) not null,     -- gte-small
+  embedding extensions.vector(384) not null,     -- gte-small
   fts tsvector generated always as (to_tsvector('english', section_path || ' ' || content)) stored
 );
 
-create index chunks_embedding_idx on chunks using hnsw (embedding vector_cosine_ops);
+create index chunks_embedding_idx on chunks using hnsw (embedding extensions.vector_cosine_ops);
 create index chunks_fts_idx on chunks using gin (fts);
 create index chunks_document_idx on chunks (document_id);
 
@@ -39,13 +39,13 @@ create table query_logs (
 -- Hybrid search: vector similarity and full-text rank merged by reciprocal rank fusion.
 create or replace function hybrid_search(
   query_text text,
-  query_embedding vector(384),
+  query_embedding extensions.vector(384),
   match_count int default 20,
   rrf_k int default 50
 )
 returns table (chunk_id bigint, score double precision)
 language sql stable
-set search_path = public
+set search_path = public, extensions
 as $$
   with semantic as (
     select id, row_number() over (order by embedding <=> query_embedding) as rank
@@ -72,3 +72,4 @@ $$;
 alter table documents enable row level security;
 alter table chunks enable row level security;
 alter table query_logs enable row level security;
+revoke execute on function hybrid_search(text, extensions.vector, int, int) from anon, authenticated, public;

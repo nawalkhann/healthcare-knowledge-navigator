@@ -1,0 +1,252 @@
+[
+  {
+    "id": "hypertension-1",
+    "topic": "hypertension",
+    "question": "What is the first-line drug treatment for essential hypertension in adults?"
+  },
+  {
+    "id": "hypertension-2",
+    "topic": "hypertension",
+    "question": "What blood pressure target is recommended for adults with hypertension and diabetes?"
+  },
+  {
+    "id": "hypertension-3",
+    "topic": "hypertension",
+    "question": "Does reducing sodium intake lower blood pressure?"
+  },
+  {
+    "id": "hypertension-4",
+    "topic": "hypertension",
+    "question": "When should combination antihypertensive therapy be started?"
+  },
+  {
+    "id": "hypertension-5",
+    "topic": "hypertension",
+    "question": "How effective is home blood pressure monitoring compared with office measurement?"
+  },
+  {
+    "id": "type-2-diabetes-1",
+    "topic": "type-2-diabetes",
+    "question": "What is the recommended first-line medication for type 2 diabetes?"
+  },
+  {
+    "id": "type-2-diabetes-2",
+    "topic": "type-2-diabetes",
+    "question": "Do SGLT2 inhibitors reduce cardiovascular events in type 2 diabetes?"
+  },
+  {
+    "id": "type-2-diabetes-3",
+    "topic": "type-2-diabetes",
+    "question": "What HbA1c target is appropriate for older adults with type 2 diabetes?"
+  },
+  {
+    "id": "type-2-diabetes-4",
+    "topic": "type-2-diabetes",
+    "question": "How effective is lifestyle intervention for preventing type 2 diabetes?"
+  },
+  {
+    "id": "type-2-diabetes-5",
+    "topic": "type-2-diabetes",
+    "question": "When should insulin be started in type 2 diabetes?"
+  },
+  {
+    "id": "asthma-1",
+    "topic": "asthma",
+    "question": "What is the preferred controller therapy for persistent asthma in adults?"
+  },
+  {
+    "id": "asthma-2",
+    "topic": "asthma",
+    "question": "Is as-needed budesonide-formoterol effective in mild asthma?"
+  },
+  {
+    "id": "asthma-3",
+    "topic": "asthma",
+    "question": "How should acute asthma exacerbations be treated in the emergency department?"
+  },
+  {
+    "id": "asthma-4",
+    "topic": "asthma",
+    "question": "What is the role of biologic therapy in severe asthma?"
+  },
+  {
+    "id": "asthma-5",
+    "topic": "asthma",
+    "question": "How should asthma be managed during pregnancy?"
+  },
+  {
+    "id": "copd-1",
+    "topic": "copd",
+    "question": "Which inhaled therapy is recommended as initial treatment for COPD?"
+  },
+  {
+    "id": "copd-2",
+    "topic": "copd",
+    "question": "Does pulmonary rehabilitation improve outcomes in COPD?"
+  },
+  {
+    "id": "copd-3",
+    "topic": "copd",
+    "question": "When are inhaled corticosteroids indicated in COPD?"
+  },
+  {
+    "id": "copd-4",
+    "topic": "copd",
+    "question": "How should acute exacerbations of COPD be treated?"
+  },
+  {
+    "id": "copd-5",
+    "topic": "copd",
+    "question": "Does long-term oxygen therapy improve survival in COPD?"
+  },
+  {
+    "id": "pneumonia-1",
+    "topic": "pneumonia",
+    "question": "What empirical antibiotic is recommended for outpatient community-acquired pneumonia?"
+  },
+  {
+    "id": "pneumonia-2",
+    "topic": "pneumonia",
+    "question": "How long should antibiotics be given for community-acquired pneumonia?"
+  },
+  {
+    "id": "pneumonia-3",
+    "topic": "pneumonia",
+    "question": "Do corticosteroids reduce mortality in severe community-acquired pneumonia?"
+  },
+  {
+    "id": "pneumonia-4",
+    "topic": "pneumonia",
+    "question": "Which severity score helps decide hospital admission for pneumonia?"
+  },
+  {
+    "id": "pneumonia-5",
+    "topic": "pneumonia",
+    "question": "Who should receive pneumococcal vaccination?"
+  },
+  {
+    "id": "urinary-tract-infection-1",
+    "topic": "urinary-tract-infection",
+    "question": "What is the first-line antibiotic for uncomplicated cystitis in women?"
+  },
+  {
+    "id": "urinary-tract-infection-2",
+    "topic": "urinary-tract-infection",
+    "question": "Should asymptomatic bacteriuria be treated?"
+  },
+  {
+    "id": "urinary-tract-infection-3",
+    "topic": "urinary-tract-infection",
+    "question": "How long should a urinary tract infection in men be treated?"
+  },
+  {
+    "id": "urinary-tract-infection-4",
+    "topic": "urinary-tract-infection",
+    "question": "Do cranberry products prevent recurrent urinary tract infections?"
+  },
+  {
+    "id": "urinary-tract-infection-5",
+    "topic": "urinary-tract-infection",
+    "question": "How should urinary tract infection be diagnosed in children?"
+  },
+  {
+    "id": "atrial-fibrillation-1",
+    "topic": "atrial-fibrillation",
+    "question": "Are direct oral anticoagulants safer than warfarin in atrial fibrillation?"
+  },
+  {
+    "id": "atrial-fibrillation-2",
+    "topic": "atrial-fibrillation",
+    "question": "How is stroke risk assessed in atrial fibrillation?"
+  },
+  {
+    "id": "atrial-fibrillation-3",
+    "topic": "atrial-fibrillation",
+    "question": "Should anticoagulation be given to elderly patients with atrial fibrillation at high bleeding risk?"
+  },
+  {
+    "id": "atrial-fibrillation-4",
+    "topic": "atrial-fibrillation",
+    "question": "When should anticoagulation be restarted after intracranial hemorrhage in atrial fibrillation?"
+  },
+  {
+    "id": "atrial-fibrillation-5",
+    "topic": "atrial-fibrillation",
+    "question": "What is the role of left atrial appendage occlusion compared with anticoagulation?"
+  },
+  {
+    "id": "heart-failure-1",
+    "topic": "heart-failure",
+    "question": "Which medications reduce mortality in heart failure with reduced ejection fraction?"
+  },
+  {
+    "id": "heart-failure-2",
+    "topic": "heart-failure",
+    "question": "Do SGLT2 inhibitors benefit heart failure with preserved ejection fraction?"
+  },
+  {
+    "id": "heart-failure-3",
+    "topic": "heart-failure",
+    "question": "What is the role of sacubitril-valsartan in heart failure?"
+  },
+  {
+    "id": "heart-failure-4",
+    "topic": "heart-failure",
+    "question": "Does exercise training improve outcomes in heart failure?"
+  },
+  {
+    "id": "heart-failure-5",
+    "topic": "heart-failure",
+    "question": "How should diuretics be used in acute decompensated heart failure?"
+  },
+  {
+    "id": "depression-1",
+    "topic": "depression",
+    "question": "How effective is collaborative care for depression in primary care?"
+  },
+  {
+    "id": "depression-2",
+    "topic": "depression",
+    "question": "What screening tool is recommended for depression in primary care?"
+  },
+  {
+    "id": "depression-3",
+    "topic": "depression",
+    "question": "Are antidepressants more effective than placebo for mild depression?"
+  },
+  {
+    "id": "depression-4",
+    "topic": "depression",
+    "question": "Does psychotherapy work as well as medication for depression in primary care?"
+  },
+  {
+    "id": "depression-5",
+    "topic": "depression",
+    "question": "How long should antidepressant treatment continue after remission?"
+  },
+  {
+    "id": "sepsis-1",
+    "topic": "sepsis",
+    "question": "How quickly should antibiotics be given in sepsis?"
+  },
+  {
+    "id": "sepsis-2",
+    "topic": "sepsis",
+    "question": "What fluid volume is recommended for initial sepsis resuscitation?"
+  },
+  {
+    "id": "sepsis-3",
+    "topic": "sepsis",
+    "question": "Which vasopressor is first-line in septic shock?"
+  },
+  {
+    "id": "sepsis-4",
+    "topic": "sepsis",
+    "question": "Do corticosteroids improve survival in septic shock?"
+  },
+  {
+    "id": "sepsis-5",
+    "topic": "sepsis",
+    "question": "How is sepsis identified early in hospitalized patients?"
+  }
+]
