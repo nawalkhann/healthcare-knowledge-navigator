@@ -1,0 +1,24 @@
+{
+  "pmcQueries": [
+    { "topic": "hypertension", "term": "hypertension[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 25 },
+    { "topic": "type-2-diabetes", "term": "\"type 2 diabetes\"[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 25 },
+    { "topic": "asthma", "term": "asthma[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 20 },
+    { "topic": "copd", "term": "(COPD[Title] OR \"chronic obstructive pulmonary disease\"[Title]) AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 20 },
+    { "topic": "pneumonia", "term": "\"community-acquired pneumonia\"[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 20 },
+    { "topic": "urinary-tract-infection", "term": "\"urinary tract infection\"[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 20 },
+    { "topic": "atrial-fibrillation", "term": "\"atrial fibrillation\"[Title] AND (anticoagulation[Title] OR anticoagulant[Title]) AND (systematic review[Title] OR meta-analysis[Title] OR guideline[Title])", "max": 20 },
+    { "topic": "heart-failure", "term": "\"heart failure\"[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 20 },
+    { "topic": "depression", "term": "depression[Title] AND \"primary care\"[Title] AND (systematic review[Title] OR meta-analysis[Title] OR guideline[Title])", "max": 15 },
+    { "topic": "sepsis", "term": "sepsis[Title] AND (guideline[Title] OR systematic review[Title] OR meta-analysis[Title])", "max": 15 }
+  ],
+  "pages": [
+    { "topic": "type-2-diabetes", "issuer": "CDC", "url": "https://www.cdc.gov/diabetes/hcp/clinical-guidance/index.html" },
+    { "topic": "type-2-diabetes", "issuer": "CDC", "url": "https://www.cdc.gov/diabetes/hcp/clinical-guidance/promote-medication-management.html" },
+    { "topic": "urinary-tract-infection", "issuer": "CDC", "url": "https://www.cdc.gov/uti/hcp/clinical-overview/index.html" },
+    { "topic": "pneumonia", "issuer": "CDC", "url": "https://www.cdc.gov/pneumococcal/hcp/clinical-guidance/index.html" },
+    { "topic": "pneumonia", "issuer": "CDC", "url": "https://www.cdc.gov/mycoplasma/hcp/clinical-care/index.html" },
+    { "topic": "sepsis", "issuer": "CDC", "url": "https://www.cdc.gov/sepsis/hcp/clinical-care/index.html" },
+    { "topic": "pneumonia", "issuer": "CDC", "url": "https://www.cdc.gov/antibiotic-use/hcp/clinical-care/adult-outpatient.html" },
+    { "topic": "pneumonia", "issuer": "CDC", "url": "https://www.cdc.gov/antibiotic-use/hcp/clinical-care/pediatric-outpatient.html" }
+  ]
+}
