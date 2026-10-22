@@ -1,0 +1,36 @@
+name: Site quality
+
+# Builds the site, checks every internal link, and runs Lighthouse on mobile.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 7 * * 1" # weekly, also checks external source links
+
+jobs:
+  links-and-lighthouse:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Check internal links
+        run: |
+          npm run start -- -p 3000 &
+          npx --yes wait-on@8 http://localhost:3000
+          npx --yes linkinator@6 http://localhost:3000 --recurse --skip "^(?!http://localhost:3000)"
+      - name: Check external source links
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        run: npx --yes linkinator@6 http://localhost:3000 --recurse --retry --skip "pmc.ncbi.nlm.nih.gov|ncbi.nlm.nih.gov"
+      - name: Lighthouse (mobile)
+        run: |
+          pkill -f "next start" || true
+          npx --yes @lhci/cli@0.14 autorun
