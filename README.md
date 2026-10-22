@@ -32,6 +32,18 @@ npm run eval:retrieval            # hit rate and MRR on data/eval/questions.json
 
 The **Ingest sources** GitHub Actions workflow runs both weekly and on demand. It needs the repository secrets `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
 
+## Answer engine
+
+`POST /api/ask` with `{"question": "..."}`:
+
+1. Strips obvious patient identifiers from the question.
+2. Runs hybrid search for the top 20 passages, then has the LLM rerank them (0-3) and keeps up to 8 that score 2 or more.
+3. Has the LLM write 2-6 sentences, each citing passage numbers. Sentences with missing or invalid citations are removed.
+4. Scores confidence (`src/lib/answer/confidence.ts`): relevance 40%, number of independent sources 20%, evidence type 25%, recency 15%. High is 0.75 or more, Moderate 0.55 or more, otherwise Low.
+5. Declines and shows the closest sources when no passage is relevant or no cited sentence survives.
+
+Every query is logged to `query_logs` without IP addresses. Requests are limited to 10 per minute per IP.
+
 ## Roadmap
 
 1. Spec and setup
