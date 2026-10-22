@@ -125,6 +125,14 @@ async function store(doc: DocInput) {
 }
 
 async function main() {
+  if (!dryRun) {
+    const { serviceKeyProblem, serviceRoleKey } = await import("../src/lib/supabase");
+    const problem = serviceKeyProblem(serviceRoleKey());
+    if (problem) {
+      console.error(`SUPABASE_SERVICE_ROLE_KEY is wrong: ${problem}.`);
+      process.exit(1);
+    }
+  }
   const sources = JSON.parse(readFileSync("data/sources.json", "utf8")) as { pmcQueries: PmcQuery[]; pages: Page[] };
   let docCount = 0;
   let chunkCount = 0;

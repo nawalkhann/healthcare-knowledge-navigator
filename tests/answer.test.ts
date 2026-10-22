@@ -77,3 +77,17 @@ describe("allowRequest", () => {
     expect(allowRequest("t", 2, 1000, 1000)).toBe(true);
   });
 });
+
+describe("serviceKeyProblem", () => {
+  const jwt = (role: string) => `x.${Buffer.from(JSON.stringify({ role })).toString("base64url")}.y`;
+  it("accepts service_role and secret keys", async () => {
+    const { serviceKeyProblem } = await import("../src/lib/supabase");
+    expect(serviceKeyProblem(jwt("service_role"))).toBeNull();
+    expect(serviceKeyProblem("sb_secret_abc")).toBeNull();
+  });
+  it("names the public key that was used instead", async () => {
+    const { serviceKeyProblem } = await import("../src/lib/supabase");
+    expect(serviceKeyProblem(jwt("anon"))).toContain('"anon" key');
+    expect(serviceKeyProblem("sb_publishable_abc")).toContain("publishable");
+  });
+});
