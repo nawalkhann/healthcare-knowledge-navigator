@@ -8,6 +8,7 @@ export const site = {
 
 export const nav = [
   { href: "/ask", label: "Ask" },
+  { href: "/topics", label: "Topics" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/sources", label: "Sources" },
   { href: "/about", label: "About" },
@@ -18,5 +19,5 @@ export const legal = [
   { href: "/terms", label: "Terms" },
 ];
 
-// Pages listed in sitemap.xml. Topic pages are appended as they are written.
-export const staticRoutes = ["/", "/ask", "/how-it-works", "/sources", "/about", "/privacy", "/terms"];
+// Pages listed in sitemap.xml alongside the topic pages.
+export const staticRoutes = ["/", "/ask", "/topics", "/how-it-works", "/sources", "/about", "/privacy", "/terms"];

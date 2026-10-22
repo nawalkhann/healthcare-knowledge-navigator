@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { topics } from "@/content/topics";
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -51,6 +52,18 @@ export default function Home() {
             <p className="mt-2 text-sm leading-6 text-slate-700">{body}</p>
           </div>
         ))}
+      </section>
+      <section className="pb-16">
+        <h2 className="mb-4 text-2xl font-semibold text-slate-900">What the guidelines say</h2>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {topics.map((t) => (
+            <li key={t.slug}>
+              <Link href={`/topics/${t.slug}`} className="text-teal-800 underline">
+                {t.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );

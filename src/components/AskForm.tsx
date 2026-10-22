@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Citation = {
   number: number;
@@ -60,6 +60,12 @@ export function AskForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
+
+  // Topic pages link here with ?q= to prefill the question.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setQuestion(q.slice(0, 500));
+  }, []);
 
   async function ask(q: string) {
     setLoading(true);
