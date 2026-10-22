@@ -1,4 +1,4 @@
-import { Prose } from "@/components/Prose";
+import { AskForm } from "@/components/AskForm";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -11,10 +11,12 @@ export const metadata = pageMetadata({
 
 export default function AskPage() {
   return (
-    <Prose>
-      <h1>Ask a clinical question</h1>
-      <p>The question tool is being built and will appear here.</p>
-      <p>Please do not enter patient names, dates of birth or record numbers.</p>
-    </Prose>
+    <main className="mx-auto max-w-3xl px-4 py-10">
+      <h1 className="mb-2 text-3xl font-semibold text-slate-900">Ask a clinical question</h1>
+      <p className="mb-6 text-slate-700">
+        Answers come only from the guidelines and research in our source library. Every statement links to its source.
+      </p>
+      <AskForm />
+    </main>
   );
 }
