@@ -17,7 +17,20 @@ cp .env.example .env.local   # fill in the values
 npm run dev
 ```
 
-Apply the database schema from `supabase/migrations/` to your Supabase project.
+Apply the database schema from `supabase/migrations/` to your Supabase project and deploy the `embed` Edge Function from `supabase/functions/embed`.
+
+## Source library
+
+`data/sources.json` lists the sources: PubMed Central open-access searches per topic (only CC BY and CC0 articles are kept) and CDC guidance pages.
+
+```bash
+npm run ingest                    # all topics
+npm run ingest -- --topic asthma  # one topic
+npm run ingest -- --dry-run       # parse and chunk only, no database writes
+npm run eval:retrieval            # hit rate and MRR on data/eval/questions.json
+```
+
+The **Ingest sources** GitHub Actions workflow runs both weekly and on demand. It needs the repository secrets `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## Roadmap
 
