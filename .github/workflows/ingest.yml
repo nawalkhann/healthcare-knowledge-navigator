@@ -35,3 +35,10 @@ jobs:
         run: npm run ingest -- ${TOPIC:+--topic "$TOPIC"}
       - name: Evaluate retrieval
         run: npm run eval:retrieval -- --k 5 --min-hit-rate 0.8
+      - name: Check the live site answers a question
+        run: |
+          curl -sS --fail-with-body -X POST https://healthcare-knowledge-navigator.vercel.app/api/ask \
+            -H 'Content-Type: application/json' \
+            -d '{"question":"What is the first-line drug treatment for essential hypertension in adults?"}' \
+            | tee answer.json
+          grep -q '"status":"answered"' answer.json
