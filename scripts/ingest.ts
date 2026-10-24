@@ -16,7 +16,7 @@ type DocInput = ParsedDocument & {
   licence: string;
 };
 
-const CHUNK_BATCH = 16; // chunks embedded per gateway call
+const CHUNK_BATCH = 4; // chunks embedded per gateway call; larger batches hit the function's compute limit
 const EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -101,12 +101,18 @@ async function store(doc: DocInput) {
     },
   });
   for (let i = 0; i < chunks.length; i += CHUNK_BATCH) {
-    await callNavigator("add_chunks", {
-      document_id: id,
-      chunks: chunks
-        .slice(i, i + CHUNK_BATCH)
-        .map((c) => ({ section_path: c.sectionPath, content: c.content, token_count: c.tokenCount })),
-    });
+    const batch = chunks
+      .slice(i, i + CHUNK_BATCH)
+      .map((c) => ({ section_path: c.sectionPath, content: c.content, token_count: c.tokenCount }));
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await callNavigator("add_chunks", { document_id: id, chunks: batch });
+        break;
+      } catch (err) {
+        if (attempt >= 4) throw err;
+        await sleep(2000 * attempt);
+      }
+    }
   }
   return chunks.length;
 }
