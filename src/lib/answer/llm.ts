@@ -2,6 +2,8 @@
 // Provider is chosen by LLM_BASE_URL, LLM_API_KEY and LLM_MODEL.
 export type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
+export const llmConfigured = () => Boolean(process.env.LLM_API_KEY && process.env.LLM_MODEL);
+
 export async function completeJson<T>(messages: ChatMessage[], maxTokens = 1200): Promise<T> {
   const baseUrl = process.env.LLM_BASE_URL ?? "https://api.openai.com/v1";
   const apiKey = process.env.LLM_API_KEY;

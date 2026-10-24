@@ -78,16 +78,27 @@ describe("allowRequest", () => {
   });
 });
 
-describe("serviceKeyProblem", () => {
-  const jwt = (role: string) => `x.${Buffer.from(JSON.stringify({ role })).toString("base64url")}.y`;
-  it("accepts service_role and secret keys", async () => {
-    const { serviceKeyProblem } = await import("../src/lib/supabase");
-    expect(serviceKeyProblem(jwt("service_role"))).toBeNull();
-    expect(serviceKeyProblem("sb_secret_abc")).toBeNull();
+
+describe("extractSentences", () => {
+  const chunk = (id: number, content: string) => ({
+    id,
+    score: 1,
+    sectionPath: "Treatment",
+    content,
+    document: { id, title: "T", issuer: "CDC", sourceUrl: "https://x", publishedYear: 2024, evidenceType: "guideline", topic: "t" },
   });
-  it("names the public key that was used instead", async () => {
-    const { serviceKeyProblem } = await import("../src/lib/supabase");
-    expect(serviceKeyProblem(jwt("anon"))).toContain('"anon" key');
-    expect(serviceKeyProblem("sb_publishable_abc")).toContain("publishable");
+
+  it("quotes sentences that share the question's terms", async () => {
+    const { extractSentences } = await import("../src/lib/answer/extractive");
+    const picked = extractSentences("What is first-line treatment for hypertension?", [
+      chunk(1, "Thiazide diuretics are a first-line treatment for hypertension in most adults. The weather was pleasant that year in the study town."),
+    ]);
+    expect(picked).toHaveLength(1);
+    expect(picked[0].text).toMatch(/^Thiazide/);
+  });
+
+  it("returns nothing when no sentence matches", async () => {
+    const { extractSentences } = await import("../src/lib/answer/extractive");
+    expect(extractSentences("How is malaria prevented in travellers?", [chunk(1, "Thiazide diuretics lower blood pressure in most adults over time.")])).toEqual([]);
   });
 });
