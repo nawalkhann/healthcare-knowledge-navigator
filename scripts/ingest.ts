@@ -1,4 +1,5 @@
-// Fetches the sources in data/sources.json, chunks and embeds them, and writes them to Supabase.
+// Fetches the sources in data/sources.json, chunks them, and stores them through the navigator gateway,
+// which embeds each chunk and writes it to Supabase.
 // Re-running is safe: each document is upserted by URL and its chunks are replaced.
 // Usage: npx tsx scripts/ingest.ts [--topic hypertension] [--dry-run]
 import { readFileSync } from "node:fs";
@@ -15,6 +16,7 @@ type DocInput = ParsedDocument & {
   licence: string;
 };
 
+const CHUNK_BATCH = 16; // chunks embedded per gateway call
 const EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -86,53 +88,30 @@ async function store(doc: DocInput) {
     console.log(`  [dry run] ${doc.title.slice(0, 80)}: ${chunks.length} chunks`);
     return chunks.length;
   }
-  const { supabaseAdmin } = await import("../src/lib/supabase");
-  const { embed } = await import("../src/lib/embed");
-  const db = supabaseAdmin();
-
-  const { data: row, error } = await db
-    .from("documents")
-    .upsert(
-      {
-        title: doc.title,
-        issuer: doc.issuer,
-        source_url: doc.sourceUrl,
-        published_year: doc.year,
-        evidence_type: doc.evidenceType,
-        licence: doc.licence,
-        topic: doc.topic,
-      },
-      { onConflict: "source_url" },
-    )
-    .select("id")
-    .single();
-  if (error) throw error;
-
-  // The section path is embedded with the text so headings help matching.
-  const embeddings = await embed(chunks.map((c) => `${c.sectionPath}\n\n${c.content}`));
-  await db.from("chunks").delete().eq("document_id", row.id);
-  const { error: insertError } = await db.from("chunks").insert(
-    chunks.map((c, i) => ({
-      document_id: row.id,
-      section_path: c.sectionPath,
-      content: c.content,
-      token_count: c.tokenCount,
-      embedding: JSON.stringify(embeddings[i]),
-    })),
-  );
-  if (insertError) throw insertError;
+  const { callNavigator } = await import("../src/lib/navigator");
+  const { id } = await callNavigator<{ id: number }>("upsert_document", {
+    document: {
+      title: doc.title,
+      issuer: doc.issuer,
+      source_url: doc.sourceUrl,
+      published_year: doc.year,
+      evidence_type: doc.evidenceType,
+      licence: doc.licence,
+      topic: doc.topic,
+    },
+  });
+  for (let i = 0; i < chunks.length; i += CHUNK_BATCH) {
+    await callNavigator("add_chunks", {
+      document_id: id,
+      chunks: chunks
+        .slice(i, i + CHUNK_BATCH)
+        .map((c) => ({ section_path: c.sectionPath, content: c.content, token_count: c.tokenCount })),
+    });
+  }
   return chunks.length;
 }
 
 async function main() {
-  if (!dryRun) {
-    const { serviceKeyProblem, serviceRoleKey } = await import("../src/lib/supabase");
-    const problem = serviceKeyProblem(serviceRoleKey());
-    if (problem) {
-      console.error(`SUPABASE_SERVICE_ROLE_KEY is wrong: ${problem}.`);
-      process.exit(1);
-    }
-  }
   const sources = JSON.parse(readFileSync("data/sources.json", "utf8")) as { pmcQueries: PmcQuery[]; pages: Page[] };
   let docCount = 0;
   let chunkCount = 0;

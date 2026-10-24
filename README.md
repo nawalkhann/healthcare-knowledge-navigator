@@ -7,7 +7,8 @@ A medical retrieval assistant that answers clinical questions from current guide
 - Next.js (App Router), TypeScript, Tailwind CSS, deployed on Vercel
 - Supabase Postgres with pgvector and full-text search for hybrid retrieval
 - gte-small embeddings (384 dimensions)
-- An LLM API for reranking and cited answer generation
+- A `navigator` Supabase Edge Function that holds all database access and embeds text
+- Optional: an OpenAI-compatible LLM API for reranking and written answers. Without one, answers quote the best-matching source sentences
 
 ## Getting started
 
@@ -17,7 +18,7 @@ cp .env.example .env.local   # fill in the values
 npm run dev
 ```
 
-Apply the database schema from `supabase/migrations/` to your Supabase project and deploy the `embed` Edge Function from `supabase/functions/embed`.
+Apply the database schema from `supabase/migrations/` to your Supabase project and deploy the `navigator` Edge Function from `supabase/functions/navigator`. Generate a random token, set it as `NAVIGATOR_TOKEN` in the app's environment, and store its SHA-256 hash in the `app_tokens` table (see `0003_app_tokens.sql`).
 
 ## Source library
 
@@ -30,13 +31,14 @@ npm run ingest -- --dry-run       # parse and chunk only, no database writes
 npm run eval:retrieval            # hit rate and MRR on data/eval/questions.json
 ```
 
-The **Ingest sources** GitHub Actions workflow runs both weekly and on demand. It needs the repository secrets `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+The **Ingest sources** GitHub Actions workflow runs both weekly and on demand. It needs no secrets: it signs in to the `navigator` function with the workflow's GitHub OIDC token, which the function only accepts from this repository's main branch.
 
 ## Answer engine
 
 `POST /api/ask` with `{"question": "..."}`:
 
 1. Strips obvious patient identifiers from the question.
+   Without `LLM_API_KEY`, steps 2-3 are replaced by quoting up to four source sentences that share the most terms with the question, and the answer is declined when none share at least a third.
 2. Runs hybrid search for the top 20 passages, then has the LLM rerank them (0-3) and keeps up to 8 that score 2 or more.
 3. Has the LLM write 2-6 sentences, each citing passage numbers. Sentences with missing or invalid citations are removed.
 4. Scores confidence (`src/lib/answer/confidence.ts`): relevance 40%, number of independent sources 20%, evidence type 25%, recency 15%. High is 0.75 or more, Moderate 0.55 or more, otherwise Low.

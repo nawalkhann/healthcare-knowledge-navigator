@@ -1,7 +1,8 @@
 name: Ingest sources
 
 # Runs the ingestion job and the retrieval evaluation against the Supabase project.
-# Needs repository secrets SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+# Writes go through the `navigator` Edge Function, which accepts this workflow's OIDC token
+# from the main branch, so no database key is stored in GitHub.
 on:
   workflow_dispatch:
     inputs:
@@ -16,9 +17,11 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
     env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_URL: https://qucujpvvyeslnbkcdryx.supabase.co
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

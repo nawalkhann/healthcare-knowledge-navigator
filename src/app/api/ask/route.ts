@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { answerQuestion } from "@/lib/answer/engine";
 import { scrubIdentifiers } from "@/lib/answer/scrub";
 import { allowRequest } from "@/lib/rate-limit";
-import { supabaseAdmin } from "@/lib/supabase";
+import { callNavigator } from "@/lib/navigator";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -26,16 +26,13 @@ export async function POST(request: Request) {
   try {
     const result = await answerQuestion(question);
     const { chunkIds, ...response } = result;
-    await supabaseAdmin()
-      .from("query_logs")
-      .insert({
-        question,
-        answer: result.status === "answered" ? result.sentences.map((s) => s.text).join(" ") : null,
-        confidence: result.status === "answered" ? result.confidence.level : "declined",
-        chunk_ids: chunkIds,
-        latency_ms: Date.now() - started,
-      })
-      .then(({ error }) => error && console.error("query log failed", error.message));
+    await callNavigator("log", {
+      question,
+      answer: result.status === "answered" ? result.sentences.map((s) => s.text).join(" ") : null,
+      confidence: result.status === "answered" ? result.confidence.level : "declined",
+      chunk_ids: chunkIds,
+      latency_ms: Date.now() - started,
+    }).catch((err) => console.error("query log failed", (err as Error).message));
     return NextResponse.json(response);
   } catch (err) {
     console.error("ask failed", err);

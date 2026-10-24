@@ -1,6 +1,7 @@
 import { searchChunks, type RetrievedChunk } from "../retrieval";
 import { scoreConfidence, type Confidence } from "./confidence";
-import { completeJson, type ChatMessage } from "./llm";
+import { extractSentences, overlapRelevance } from "./extractive";
+import { completeJson, llmConfigured, type ChatMessage } from "./llm";
 
 const RERANK_KEEP = 8;
 const MIN_RELEVANCE = 2; // rerank scale 0-3; below this a passage is not used
@@ -99,11 +100,49 @@ const toCitation = (c: RetrievedChunk, number: number): Citation => ({
   excerpt: c.content.length > 400 ? `${c.content.slice(0, 400)}…` : c.content,
 });
 
+// Without a language model: quote the best-matching source sentences, grouped by passage.
+function extractiveAnswer(question: string, retrieved: RetrievedChunk[]): AnswerResult {
+  const passages = retrieved.slice(0, RERANK_KEEP);
+  const picked = extractSentences(question, passages);
+  if (picked.length === 0) {
+    return {
+      status: "declined",
+      reason: "The library does not contain a passage that clearly answers this question.",
+      closestSources: passages.slice(0, 3).map((c, i) => toCitation(c, i + 1)),
+      chunkIds: passages.slice(0, 3).map((c) => c.id),
+    };
+  }
+  const { sentences, usedPassages } = checkCitations(
+    { insufficient: false, sentences: picked.map((p) => ({ text: p.text, citations: [p.passage + 1] })) },
+    passages.length,
+  );
+  const cited = usedPassages.map((n) => passages[n - 1]);
+  const best = new Map<number, number>();
+  for (const p of picked) best.set(p.passage + 1, Math.max(best.get(p.passage + 1) ?? 0, p.overlap));
+  const confidence = scoreConfidence(
+    usedPassages.map((n) => ({
+      relevance: overlapRelevance(best.get(n) ?? 0),
+      documentId: passages[n - 1].document.id,
+      evidenceType: passages[n - 1].document.evidenceType,
+      publishedYear: passages[n - 1].document.publishedYear,
+    })),
+  );
+  confidence.reasons.push("Sentences are quoted directly from the sources.");
+  return {
+    status: "answered",
+    sentences,
+    citations: cited.map((c, i) => toCitation(c, i + 1)),
+    confidence,
+    chunkIds: cited.map((c) => c.id),
+  };
+}
+
 export async function answerQuestion(question: string): Promise<AnswerResult> {
   const retrieved = await searchChunks(question, 20);
   if (retrieved.length === 0) {
     return { status: "declined", reason: "No sources in the library match this question.", closestSources: [], chunkIds: [] };
   }
+  if (!llmConfigured()) return extractiveAnswer(question, retrieved);
 
   const ranked = await rerank(question, retrieved);
   const passages = ranked.filter((c) => c.relevance >= MIN_RELEVANCE).slice(0, RERANK_KEEP);
