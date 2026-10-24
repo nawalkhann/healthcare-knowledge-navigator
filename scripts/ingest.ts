@@ -16,7 +16,7 @@ type DocInput = ParsedDocument & {
   licence: string;
 };
 
-const CHUNK_BATCH = 4; // chunks embedded per gateway call; larger batches hit the function's compute limit
+const CHUNK_BATCH = 2; // chunks embedded per gateway call; larger batches hit the function's compute limit
 const EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
