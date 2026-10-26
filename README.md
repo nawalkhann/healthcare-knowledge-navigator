@@ -22,6 +22,8 @@ Apply the database schema from `supabase/migrations/` to your Supabase project a
 
 ## Source library
 
+The [`literature/`](literature/) folder lists every source in the library by topic, with links and licences.
+
 `data/sources.json` lists the sources: PubMed Central open-access searches per topic (only CC BY and CC0 articles are kept) and CDC guidance pages.
 
 ```bash
